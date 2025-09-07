@@ -1,0 +1,6 @@
+Pillow>=10.0.0
+RPi.GPIO>=0.7.1
+adafruit-circuitpython-bmp280>=3.0.0
+adafruit-circuitpython-adxl34x>=1.0.0
+adafruit-blinka>=8.0.0
+
