@@ -53,9 +53,8 @@ def main(fullscreen: bool = False, use_real_sensors: bool = False):
         print("Initializing real sensors...")
         try:
             # Initialize sensors with your specific configuration
-            # Adjust these values for your setup:
-            hall_pin = 18  # GPIO pin for hall sensor
-            wheel_circumference = 1.0  # Wheel circumference in meters (measure your wheel!)
+            hall_pin = 24  # GPIO pin for hall sensor
+            wheel_circumference = 0.1397  # Wheel circumference in meters 
             
             sensor_manager = initialize_sensors(hall_pin, wheel_circumference)
             

@@ -31,12 +31,11 @@ class DarkRideDashboard(tk.Tk):
 
         # Basic window setup
         self.title(title)
-        self.configure(bg="#000000")  # pure black
+        self.configure(bg="#000000")  
         self._fullscreen = bool(fullscreen)
         if self._fullscreen:
             self.attributes("-fullscreen", True)
         else:
-            # Lock geometry to avoid flicker/resizes in windowed mode
             self.geometry("800x480")
             self.update_idletasks()
             w = self.winfo_width()
@@ -73,11 +72,6 @@ class DarkRideDashboard(tk.Tk):
                 self._logo_image_base = Image.open(self._logo_path).convert("RGBA")
             except Exception:
                 self._logo_image_base = None
-
-        # Background canvas for bat symbol (behind all UI)
-        self._bg_canvas = tk.Canvas(self, bg=self["bg"], highlightthickness=0, bd=0)
-        self._bg_canvas.place(relx=0, rely=0, relwidth=1, relheight=1)
-        self.bind("<Configure>", self._on_resize)
 
         # Content root stacked over canvas
         self._content_root = tk.Frame(self, bg=self["bg"])
@@ -140,35 +134,6 @@ class DarkRideDashboard(tk.Tk):
         self.bind("<Escape>", lambda e: self.destroy())
         self.bind("<F11>", self._toggle_fullscreen)
         self.bind("<Right>", lambda e: self._cycle_page())
-
-    # Background drawing and resize handling
-    def _on_resize(self, _event):
-        self._draw_bat_background()
-        # also refresh speed canvas to keep centered drawing
-        if hasattr(self, "_redraw_speed_canvas"):
-            self._redraw_speed_canvas()
-
-    def _draw_bat_background(self):
-        c = self._bg_canvas
-        c.delete("all")
-        w = c.winfo_width()
-        h = c.winfo_height()
-        if w <= 0 or h <= 0:
-            return
-        # Fill black background explicitly to avoid any flicker
-        c.create_rectangle(0, 0, w, h, fill="#000000", outline="")
-        if self._logo_image_base is not None and ImageTk is not None:
-            # Fit the logo to a portion of screen
-            max_w = int(w * 0.6)
-            max_h = int(h * 0.6)
-            img = self._logo_image_base.copy()
-            img.thumbnail((max_w, max_h), Image.LANCZOS)
-            self._bg_logo_tk = ImageTk.PhotoImage(img)
-            c.create_image(w // 2, h // 2, image=self._bg_logo_tk)
-        else:
-            # Fallback: minimal outline rectangle so background isn't empty
-            margin = int(min(w, h) * 0.1)
-            c.create_rectangle(margin, margin, w - margin, h - margin, outline=self.primary_color, width=3)
 
     def _toggle_fullscreen(self, _event=None):
         current = bool(self.attributes("-fullscreen"))
